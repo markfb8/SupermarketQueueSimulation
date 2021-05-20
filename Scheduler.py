@@ -2,57 +2,64 @@ from queue import Queue
 
 from Server import *
 from Source import *
-from event import *;
+from Event import Event;
 
 
 class Scheduler:
-
     currentTime = 0
     eventList = []
-    ...
-    
+
     def __init__(self, numarribades, prob0, prob1, prob2):
-        # creació dels objectes que composen el meu model
-        self.source = Source(self,numarribades, prob0, prob1, prob2)
+        # Creació dels objectes que composen el meu model
+        self.source = Source(self, numarribades, prob0, prob1, prob2)
         self.server1 = Server()
         self.server2 = Server()
-        self.server3 = Server()
-        self.server4 = Server()
         self.queue = Queue()
 
-        self.source.crearConnexio(server)
-        self.server.crearConnexio(server2, queue)
-        
-        self.simulationStart=Event(self,'SIMULATION_START', 0,null))
-        self.eventList.append(simulationStart)
+        # Establim connexions
+        self.source.crearConnexio(self.server1)
+        self.server.crearConnexio(self.server2, self.queue)
+
+        # Iniciem simulació
+        simstart = Event('SIMULATION_START', 0, None)
+        self.eventList.append(simstart)
 
     def run(self):
-        #configurar el model per consola, arxiu de text...
-        self.configurarModel()
-
-        #rellotge de simulacio a 0
-        self.currentTime=0        
-        #bucle de simulació (condició fi simulació llista buida)
+        # Rellotge de simulacio a 0
+        self.currentTime = 0
+        # Bucle de simulació (condició fi simulació llista buida)
         while self.eventList:
-            #recuperem event simulacio
-            event=self.eventList.donamEsdeveniment
-            #actualitzem el rellotge de simulacio
-            self.currentTime=event.time
-            # deleguem l'acció a realitzar de l'esdeveniment a l'objecte que l'ha generat
-            # també podríem delegar l'acció a un altre objecte
+            # Recuperem event simulacio
+            event = self.eventList.donamEsdeveniment
+            # Actualitzem el rellotge de simulacio
+            self.currentTime = event.time
+            # Deleguem l'acció a realitzar de l'esdeveniment a l'objecte que l'ha generat
+            # També podríem delegar l'acció a un altre objecte
             event.objecte.tractarEsdeveniment(event)
-        
-        #recollida d'estadístics
+
+        # Recollida d'estadístics
         self.recollirEstadistics()
 
-    def afegirEsdeveniment(self,event):
-        #inserir esdeveniment de forma ordenada
+    def afegirEsdeveniment(self, event):
+        # Inserir esdeveniment de forma ordenada
         self.eventList.inserirEvent(event)
 
-    def tractarEsdeveniment(self,event):
-        if (event.tipus=="SIMULATION_START"):
-            # comunicar a tots els objectes que cal preparar-se            
-            
+    def tractarEsdeveniment(self, event):
+        if event.tipus == "SIMULATION_START":
+            # comunicar a tots els objectes que cal preparar-se
+            self.source.tractarEsdeveniment(event)
+            self.server1.tractarEsdeveniment(event)
+            self.server2.tractarEsdeveniment(event)
+
+    def recollirEstadistics(self):
+        print("")
+        print("ESTADÍSTICS")
+        print("Nombre d'entitats creades: " + str(self.source.entitatscreades))
+        print("Nombre d'entitats perdudes: " + str(self.source.entitatsperdudes))
+        print("Nombre d'entitats processades per caixa 1: " + str(self.server1.entitatstractades))
+        print("Nombre d'entitats processades per caixa 2: " + str(self.server2.entitatstractades))
+        print("")
+
 
 if __name__ == "__main__":
     scheduler = Scheduler()

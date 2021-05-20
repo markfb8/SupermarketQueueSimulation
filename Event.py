@@ -1,5 +1,5 @@
 class Event:
-    def __init__(self, type, time, object):
-        self.type = type
+    def __init__(self, tipus, time, entitat):
+        self.tipus = tipus
         self.time = time
-        self.object = object
+        self.entitat = entitat
