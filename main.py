@@ -1,4 +1,4 @@
-import Scheduler
+from Scheduler import Scheduler
 
 if __name__ == '__main__':
 
@@ -28,6 +28,7 @@ if __name__ == '__main__':
     print("Clients de tipus ""pocs dubtes"": " + str(probpocsdubtes))
     print("Clients de tipus ""molts dubtes"": " + str(probmoltsdubtes))
 
-    #Iniciem el simulador
-    Scheduler(numarribades, probcapdubte, probpocsdubtes, probmoltsdubtes)
+    # Iniciem el simulador
+    scheduler = Scheduler(numarribades, probcapdubte, probpocsdubtes, probmoltsdubtes)
+    scheduler.run()
 
