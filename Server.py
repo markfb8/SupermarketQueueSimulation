@@ -10,13 +10,14 @@ class Server:
         self.state = "idle"
         self.scheduler = scheduler
         self.entitatActiva = None
+        self.timeprocessing = 0
     
     def recullEntitat(self, time, entitat):
         self.entitatActiva = entitat
         self.programarFinalServei(time)
 
     def tractarEsdeveniment(self, event):
-        if event.tipus == 'SIMULATION START':
+        if event.tipus == 'SIMULATION_START':
             self.simulationStart()
         elif event.tipus == 'END_SERVICE':
             self.processarFiServei(event.time)
@@ -29,10 +30,11 @@ class Server:
         # que triguem a fer un servei (aleatorietat)
         tempsservei = self.calcularTemps()
         # incrementem estadistics si s'escau
+        self.timeprocessing = self.timeprocessing + 1
         self.entitatstractades = self.entitatstractades+1
         self.state = "busy"
         # programació final servei
-        return Event('END_SERVICE', time + tempsservei, self)
+        self.scheduler.afegirEsdeveniment(Event('END_SERVICE', time + tempsservei, self))
 
     def processarFiServei(self, time):
         # Registrar estadístics
@@ -46,4 +48,7 @@ class Server:
     
     def calcularTemps(self):
         # calculem temps entre arribades segons el nivell d'arribades de forma aleatòria
-        return randint(2, 5) * self.entitatActiva.doubts
+        if self.entitatActiva.doubts == 0:
+            return randint(1, 3)
+        else:
+            return randint(1, 5) * self.entitatActiva.doubts

@@ -27,7 +27,7 @@ class Source:
         self.server4 = server4
 
     def tractarEsdeveniment(self, event):
-        if event.tipus == 'SIMULATION START':
+        if event.tipus == 'SIMULATION_START':
             self.simulationStart()
         elif event.tipus == 'NEXT ARRIVAL':
             self.processNextArrival(event)
@@ -44,20 +44,20 @@ class Source:
         # Ho passem a on pertoqui, sinó ho posem a la cua
         if self.scheduler.queue.empty():
             if self.server1.state == "idle":
-                self.server1.recullEntitat(entitat)
+                self.server1.recullEntitat(event.time, entitat)
             elif self.server2.state == "idle":
-                self.server2.recullEntitat(entitat)
+                self.server2.recullEntitat(event.time, entitat)
             elif self.server3.state == "idle":
-                self.server3.recullEntitat(entitat)
+                self.server3.recullEntitat(event.time, entitat)
             elif self.server4.state == "idle":
-                self.server4.recullEntitat(entitat)
+                self.server4.recullEntitat(event.time, entitat)
             else:
                 self.scheduler.queue.put(entitat)
         else:
             self.scheduler.queue.put(entitat)
 
         # Cal programar la següent arribada
-        nouevent = self.properaArribada(event.temps)
+        nouevent = self.properaArribada(event.time)
         self.scheduler.afegirEsdeveniment(nouevent)
 
     def properaArribada(self, time):
@@ -69,11 +69,11 @@ class Source:
     def calcularTemps(self):
         # Calculem temps entre arribades segons el nivell d'arribades de forma aleatòria
         if self.numarribades == 1:
-            return 40
+            return 8
         elif self.numarribades == 2:
-            return 20
-        elif self.numarribades == 3:
             return 5
+        elif self.numarribades == 3:
+            return 1
 
     def crearEntitat(self, time):
         random = randint(1, 100)
