@@ -74,9 +74,13 @@ class Scheduler:
                     self.server3.tractarEsdeveniment(event)
                     self.server4.tractarEsdeveniment(event)
             else:
-                event.entitat.tractarEsdeveniment(event)
-                if event.tipus == "END_SERVICE":
-                    self.comprovaCua()
+                if event.tipus == 'NEW_SERVICE':
+                    if not self.queue.empty():
+                        event.entitat.recullEntitat(event.time, self.queue.get())
+                else:
+                    event.entitat.tractarEsdeveniment(event)
+                    if event.tipus == "END_SERVICE":
+                        self.comprovaCua()
 
         # Recollida d'estadístics
         self.recollirEstadistics()

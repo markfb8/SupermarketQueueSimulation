@@ -40,11 +40,9 @@ class Server:
         # Registrar estadístics
         self.entitatActiva = None
         self.entitatstractades = self.entitatstractades+1
-        # Si hi ha algú esperant a la cua passem a processar-lo sinó passem a estar disponibles
-        if not self.scheduler.queue.empty():
-            self.recullEntitat(time, self.scheduler.queue.get())
-        else:
-            self.state = "idle"
+        self.state = 'idle'
+        # Cal avisar que podem tractar la següent entitat
+        self.scheduler.afegirEsdeveniment(Event('NEW_SERVICE', time, self))
     
     def calcularTemps(self):
         # calculem temps entre arribades segons el nivell d'arribades de forma aleatòria
