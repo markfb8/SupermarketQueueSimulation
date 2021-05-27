@@ -30,7 +30,7 @@ class Server:
         # que triguem a fer un servei (aleatorietat)
         tempsservei = self.calcularTemps()
         # incrementem estadistics si s'escau
-        self.timeprocessing = self.timeprocessing + 1
+        self.timeprocessing = self.timeprocessing + tempsservei
         self.entitatstractades = self.entitatstractades+1
         self.state = "busy"
         # programació final servei
@@ -39,7 +39,6 @@ class Server:
     def processarFiServei(self, time):
         # Registrar estadístics
         self.entitatActiva = None
-        self.entitatstractades = self.entitatstractades+1
         self.state = 'idle'
         # Cal avisar que podem tractar la següent entitat
         self.scheduler.afegirEsdeveniment(Event('NEW_SERVICE', time, self))
@@ -47,6 +46,6 @@ class Server:
     def calcularTemps(self):
         # calculem temps entre arribades segons el nivell d'arribades de forma aleatòria
         if self.entitatActiva.doubts == 0:
-            return randint(1, 3)
+            return randint(1, 2)
         else:
-            return randint(1, 5) * self.entitatActiva.doubts
+            return randint(2, 3) * self.entitatActiva.doubts

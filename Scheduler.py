@@ -48,6 +48,7 @@ class Scheduler:
 
         # Estadístic
         self.clientsperduts = 0
+        self.staytime = 0
 
         # Iniciem simulació
         simstart = Event('SIMULATION_START', 0, None)
@@ -76,7 +77,9 @@ class Scheduler:
             else:
                 if event.tipus == 'NEW_SERVICE':
                     if not self.queue.empty():
-                        event.entitat.recullEntitat(event.time, self.queue.get())
+                        c = self.queue.get()
+                        self.staytime = self.staytime + (self.currentTime - c.created_at)
+                        event.entitat.recullEntitat(event.time, c)
                 else:
                     event.entitat.tractarEsdeveniment(event)
                     if event.tipus == "END_SERVICE":
@@ -104,7 +107,7 @@ class Scheduler:
         auxqueue = Queue()
         while not self.queue.empty():
             entitat = self.queue.get()
-            if (entitat.created_at + self.currentTime) > 15:
+            if (self.currentTime - entitat.created_at) > 15:
                 self.clientsperduts = self.clientsperduts + 1
             else:
                 auxqueue.put(entitat)
@@ -115,7 +118,6 @@ class Scheduler:
     def recollirEstadistics(self):
         print("")
         print("STATISTICS")
-        print("Total number of customers: " + str(self.source.entitatscreades))
         if self.clientsperduts == 0:
             print("No lost customers! :)")
         else:
@@ -125,15 +127,21 @@ class Scheduler:
         print("Customers who payed at checkout 2: " + str(self.server2.entitatstractades))
         print("Customers who payed at checkout 3: " + str(self.server3.entitatstractades))
         print("Customers who payed at checkout 4: " + str(self.server4.entitatstractades))
-        avg1 = (self.server1.timeprocessing / self.server1.entitatstractades)
-        avg2 = (self.server2.timeprocessing / self.server2.entitatstractades)
-        avg3 = (self.server3.timeprocessing / self.server3.entitatstractades)
-        avg4 = (self.server4.timeprocessing / self.server4.entitatstractades)
+        avg1 = avg2 = avg3 = avg4 = 0
+        if self.server1.entitatstractades != 0:
+            avg1 = (self.server1.timeprocessing / self.server1.entitatstractades)
+        elif self.server2.entitatstractades != 0:
+            avg2 = (self.server2.timeprocessing / self.server2.entitatstractades)
+        elif self.server3.entitatstractades != 0:
+            avg3 = (self.server3.timeprocessing / self.server3.entitatstractades)
+        elif self.server4.entitatstractades != 0:
+            avg4 = (self.server4.timeprocessing / self.server4.entitatstractades)
         print("Average process time of supermarket checkouts: " + str((avg1 + avg2 + avg3 + avg4) / 4))
+        processed = self.server1.entitatstractades + self.server2.entitatstractades + self.server3.entitatstractades + self.server4.entitatstractades
+        print("Average staytime of supermarket queue: " + str(self.staytime / processed))
         print("")
 
 
 if __name__ == '__main__':
     scheduler = Scheduler()
     scheduler.run()
-

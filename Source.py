@@ -69,17 +69,17 @@ class Source:
     def calcularTemps(self):
         # Calculem temps entre arribades segons el nivell d'arribades de forma aleatòria
         if self.numarribades == 1:
-            return 8
+            return randint(5, 10)
         elif self.numarribades == 2:
-            return 5
+            return randint(2, 5)
         elif self.numarribades == 3:
-            return 1
+            return randint(1, 2)
 
     def crearEntitat(self, time):
-        random = randint(1, 100)
-        if random < self.probcapdubte:
-            return Client(0, time)
-        elif random < self.probpocsdubtes:
-            return Client(3, time)
+        prob = randint(1, 100)
+        if prob < self.probcapdubte:
+            return Client(randint(0, 1), time)
+        elif prob < self.probpocsdubtes:
+            return Client(randint(2, 3), time)
         else:
-            return Client(7, time)
+            return Client(randint(4, 5), time)
