@@ -19,9 +19,9 @@ class Scheduler:
         numarribades = int(input())
         # Tipus de clients
         print("")
-        print("Specify the probability of <no doubts> customers with an integer from 1 to 100:")
+        print("Specify the probability of customers with few products with an integer from 1 to 100:")
         probcapdubte = int(input())
-        print("Specify the probability of <lots of doubts> customers with an integer from 1 to 100:")
+        print("Specify the probability of customers with lots of products with an integer from 1 to 100:")
         probmoltsdubtes = int(input())
         probpocsdubtes = 100 - (probmoltsdubtes + probcapdubte)
         # Temps de simulació
@@ -32,9 +32,9 @@ class Scheduler:
         print("")
         print("SELECTED PARAMETERS:")
         print("Volume of arrivals: Level" + str(numarribades))
-        print("<No doubts>  customers: " + str(probcapdubte) + "%")
-        print("<Some doubts> customers: " + str(probpocsdubtes) + "%")
-        print("<Lots of doubts> customers: " + str(probmoltsdubtes) + "%")
+        print("Customers with few products: " + str(probcapdubte) + "%")
+        print("Customers with some products: " + str(probpocsdubtes) + "%")
+        print("Customers with lots of products: " + str(probmoltsdubtes) + "%")
         print("Simulation time: " + str(self.simulationtime) + " minutes")
 
         # Creació dels objectes que composen el meu model
