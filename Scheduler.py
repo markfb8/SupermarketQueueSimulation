@@ -117,12 +117,7 @@ class Scheduler:
 
     def recollirEstadistics(self):
         print("")
-        print("STATISTICS")
-        if self.clientsperduts == 0:
-            print("No lost customers! :)")
-        else:
-            print("Lost customers: " + str(self.clientsperduts) + " :(")
-
+        print("---- STATISTICS ----")
         print("Customers who payed at checkout 1: " + str(self.server1.entitatstractades))
         print("Customers who payed at checkout 2: " + str(self.server2.entitatstractades))
         print("Customers who payed at checkout 3: " + str(self.server3.entitatstractades))
@@ -139,6 +134,18 @@ class Scheduler:
         print("Average process time of supermarket checkouts: " + str((avg1 + avg2 + avg3 + avg4) / 4))
         processed = self.server1.entitatstractades + self.server2.entitatstractades + self.server3.entitatstractades + self.server4.entitatstractades
         print("Average staytime of supermarket queue: " + str(self.staytime / processed))
+
+        if self.clientsperduts == 0:
+            print("No lost customers! :)")
+        else:
+            print("Lost customers: " + str(self.clientsperduts) + " :(")
+            print("Lost customers over total number of customers: " + str(
+                self.clientsperduts / (avg1 + avg2 + avg3 + avg4 + self.clientsperduts) * 100) + "%")
+
+        print("Checkout 1 was busy: " + str((self.server1.timeprocessing / self.simulationtime) * 100) + "% of simulation time")
+        print("Checkout 2 was busy: " + str((self.server2.timeprocessing / self.simulationtime) * 100) + "% of simulation time")
+        print("Checkout 3 was busy: " + str((self.server3.timeprocessing / self.simulationtime) * 100) + "% of simulation time")
+        print("Checkout 4 was busy: " + str((self.server4.timeprocessing / self.simulationtime) * 100) + "% of simulation time")
         print("")
 
 
